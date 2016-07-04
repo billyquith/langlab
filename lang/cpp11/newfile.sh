@@ -7,9 +7,10 @@ FNAME=$1.cpp
 if [ -e $FNAME ]; then echo "$FNAME exists"; exit 1; fi
 
 cat <<EOM > $FNAME
+
 #include "lang.hpp"
 
-TEST_CASE("test")
+TEST_CASE("")
 {
     SECTION("")
     {

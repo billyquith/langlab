@@ -5,6 +5,7 @@ cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH
 set(SOURCE_FILES
     lang.hpp
     #source_files
+    operator.cpp
     utilities.cpp
     decl.cpp
     main.cpp

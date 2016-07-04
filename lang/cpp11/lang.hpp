@@ -1,5 +1,8 @@
 
 #include "catch.hpp"
+#include <iostream>
+
+#define PRINT(FMT, ...) printf(FMT, ##__VA_ARGS__)
 
 // static assert
 #define SA(T) static_assert(T, #T)

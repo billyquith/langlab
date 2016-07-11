@@ -28,13 +28,40 @@ struct FuncTraits<ReturnType(ClassType::*)(Args...) const>
 };
 
 
+template<typename T, typename = void>
+struct IsCallable : std::false_type {};
+// Return false if we don't want to include function objects void()
+// else return is_function<T>
+
+template<typename T>
+struct IsCallable<T,
+    typename std::enable_if< std::is_same<decltype(void(&T::operator())), void>::value
+                             && !std::is_function<T>::value
+                            >::type> : std::true_type
+{};
+
+
 template <typename T, typename U = void>
-struct IsLambda {
+struct IsLambda
+{
     static constexpr bool value = false;
 };
 
 template <typename T>
 struct IsLambda<T, typename std::enable_if<std::is_class<T>::value>::type>
+{
+    static constexpr bool value = true;
+};
+
+
+template <typename T, typename U = void>
+struct IsFW
+{
+    static constexpr bool value = false;
+};
+
+template <typename T>
+struct IsFW<std::function<T>>
 {
     static constexpr bool value = true;
 };
@@ -53,7 +80,7 @@ TEST_CASE("Lambda traits")
     
     SECTION("void(int)")
     {
-        auto lmb = [](int) {};
+        auto lmb = std::function<void(int)>(); // [](int) {};
         typedef FuncTraits<decltype(lmb)> LambdaTraits;
         
         SA(type_is_same(LambdaTraits::result_type, void));
@@ -71,21 +98,47 @@ TEST_CASE("Lambda traits")
     }
 }
 
-TEST_CASE("Is Lambda?")
+TEST_CASE("Tests")
 {
     struct C { void foo(); };
     
-    SECTION("test")
+    SECTION("is lambda")
     {
         auto lmb = [] (void) {};
         typedef decltype(lmb) lmb_t;
-        
-        SA(IsLambda<lmb_t>::value);
+
+        std::function<int(float&)> fw;
+        typedef decltype(fw) fw_t;
+
+        SA(!IsFW<lmb_t>::value);
+        SA( IsFW<fw_t>::value);
         
         SA(!IsLambda<void()>::value);
-        SA(!IsLambda<void(*)()>::value);        
+        SA(!IsLambda<void(*)()>::value);
         SA(!IsLambda<decltype(&C::foo)>::value);
         SA(!IsLambda<int(C::*)>::value);
+        //SA(!IsLambda<C>::value);
+    }
+
+    SECTION("is callable")
+    {
+        auto lmb = [] (void) {};
+        typedef decltype(lmb) lmb_t;
+
+        std::function<int(float&)> fw;
+        typedef decltype(fw) fw_t;
+        
+        SA( IsCallable<lmb_t>::value);
+        SA( IsCallable<fw_t>::value);
+        
+        SA(!IsCallable<int(int)>::value);
+        SA(!IsCallable<void(*)()>::value);
+        SA(!IsCallable<decltype(&C::foo)>::value);
+        SA(!IsCallable<int(C::*)>::value);
+        
+        SA( std::is_function<void()>::value);
+        SA(!std::is_function<lmb_t>::value);
+        SA(!std::is_function<fw_t>::value);
     }
 }
 

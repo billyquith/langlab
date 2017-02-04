@@ -14,14 +14,14 @@ TEST_CASE("decltype")
     
     SECTION("entity type")
     {
-        SA(type_is_same(int, decltype(S::i)));
-        SA(type_is_same(double, decltype(S::d)));
+        STATIC_ASSERT(TYPE_IS_SAME(int, decltype(S::i)));
+        STATIC_ASSERT(TYPE_IS_SAME(double, decltype(S::d)));
 
-        SA(!type_is_same(int*, decltype(S::i)));
-        SA(!type_is_same(int&, decltype(S::i)));
-        SA(!type_is_same(int&&, decltype(S::i)));
+        STATIC_ASSERT(!TYPE_IS_SAME(int*, decltype(S::i)));
+        STATIC_ASSERT(!TYPE_IS_SAME(int&, decltype(S::i)));
+        STATIC_ASSERT(!TYPE_IS_SAME(int&&, decltype(S::i)));
         
-        SA(!type_is_same(int, decltype(l1)));   // type is lambda, return type int
+        STATIC_ASSERT(!TYPE_IS_SAME(int, decltype(l1)));   // type is lambda, return type int
     }
 
     SECTION("expression")

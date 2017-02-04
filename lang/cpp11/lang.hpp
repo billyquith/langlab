@@ -5,7 +5,7 @@
 #define PRINT(FMT, ...) printf(FMT, ##__VA_ARGS__)
 
 // static assert
-#define SA(T) static_assert(T, #T)
+#define STATIC_ASSERT(T) static_assert(T, #T)
 
 // std::is_same - type same
-#define type_is_same(A,B) std::is_same<A,B>::value
+#define TYPE_IS_SAME(A,B) std::is_same<A,B>::value

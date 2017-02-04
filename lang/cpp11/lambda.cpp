@@ -74,8 +74,8 @@ TEST_CASE("Lambda traits")
         auto lmb = [](){};
         typedef FuncTraits<decltype(lmb)> LambdaTraits;
         
-        SA(type_is_same(LambdaTraits::result_type, void));
-        SA(LambdaTraits::arity == 0);
+        STATIC_ASSERT(TYPE_IS_SAME(LambdaTraits::result_type, void));
+        STATIC_ASSERT(LambdaTraits::arity == 0);
     }
     
     SECTION("void(int)")
@@ -83,9 +83,9 @@ TEST_CASE("Lambda traits")
         auto lmb = std::function<void(int)>(); // [](int) {};
         typedef FuncTraits<decltype(lmb)> LambdaTraits;
         
-        SA(type_is_same(LambdaTraits::result_type, void));
-        SA(LambdaTraits::arity == 1);
-        SA(type_is_same(LambdaTraits::arg<0>::type, int));
+        STATIC_ASSERT(TYPE_IS_SAME(LambdaTraits::result_type, void));
+        STATIC_ASSERT(LambdaTraits::arity == 1);
+        STATIC_ASSERT(TYPE_IS_SAME(LambdaTraits::arg<0>::type, int));
     }
 
     SECTION("const char*(void)")
@@ -93,8 +93,8 @@ TEST_CASE("Lambda traits")
         auto lmb = []() { return "hello"; };
         typedef FuncTraits<decltype(lmb)> LambdaTraits;
         
-        SA(type_is_same(LambdaTraits::result_type, const char*));
-        SA(LambdaTraits::arity == 0);
+        STATIC_ASSERT(TYPE_IS_SAME(LambdaTraits::result_type, const char*));
+        STATIC_ASSERT(LambdaTraits::arity == 0);
     }
 }
 
@@ -110,14 +110,14 @@ TEST_CASE("Tests")
         std::function<int(float&)> fw;
         typedef decltype(fw) fw_t;
 
-        SA(!IsFW<lmb_t>::value);
-        SA( IsFW<fw_t>::value);
+        STATIC_ASSERT(!IsFW<lmb_t>::value);
+        STATIC_ASSERT( IsFW<fw_t>::value);
         
-        SA(!IsLambda<void()>::value);
-        SA(!IsLambda<void(*)()>::value);
-        SA(!IsLambda<decltype(&C::foo)>::value);
-        SA(!IsLambda<int(C::*)>::value);
-        //SA(!IsLambda<C>::value);
+        STATIC_ASSERT(!IsLambda<void()>::value);
+        STATIC_ASSERT(!IsLambda<void(*)()>::value);
+        STATIC_ASSERT(!IsLambda<decltype(&C::foo)>::value);
+        STATIC_ASSERT(!IsLambda<int(C::*)>::value);
+        //STATIC_ASSERT(!IsLambda<C>::value);
     }
 
     SECTION("is callable")
@@ -128,17 +128,17 @@ TEST_CASE("Tests")
         std::function<int(float&)> fw;
         typedef decltype(fw) fw_t;
         
-        SA( IsCallable<lmb_t>::value);
-        SA( IsCallable<fw_t>::value);
+        STATIC_ASSERT( IsCallable<lmb_t>::value);
+        STATIC_ASSERT( IsCallable<fw_t>::value);
         
-        SA(!IsCallable<int(int)>::value);
-        SA(!IsCallable<void(*)()>::value);
-        SA(!IsCallable<decltype(&C::foo)>::value);
-        SA(!IsCallable<int(C::*)>::value);
+        STATIC_ASSERT(!IsCallable<int(int)>::value);
+        STATIC_ASSERT(!IsCallable<void(*)()>::value);
+        STATIC_ASSERT(!IsCallable<decltype(&C::foo)>::value);
+        STATIC_ASSERT(!IsCallable<int(C::*)>::value);
         
-        SA( std::is_function<void()>::value);
-        SA(!std::is_function<lmb_t>::value);
-        SA(!std::is_function<fw_t>::value);
+        STATIC_ASSERT( std::is_function<void()>::value);
+        STATIC_ASSERT(!std::is_function<lmb_t>::value);
+        STATIC_ASSERT(!std::is_function<fw_t>::value);
     }
 }
 
@@ -149,9 +149,9 @@ TEST_CASE("Lambda properties")
         auto lmb = [] (void) {};
         typedef decltype(lmb) lmb_t;
         
-        SA(std::is_object<lmb_t>::value);
-        SA(!std::is_pod<lmb_t>::value);
-        SA(std::is_class<lmb_t>::value);
+        STATIC_ASSERT(std::is_object<lmb_t>::value);
+        STATIC_ASSERT(!std::is_pod<lmb_t>::value);
+        STATIC_ASSERT(std::is_class<lmb_t>::value);
     }
 }
 

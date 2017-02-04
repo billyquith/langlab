@@ -31,9 +31,9 @@ TEST_CASE("Test for existence of an operator")
     
     SECTION("")
     {
-        SA(TestEq::EqualExists<NoEq>::value == false);
-        SA(TestEq::EqualExists<Eq>::value == true);
-        SA(TestEq::EqualExists<ExEq>::value == true);
+        STATIC_ASSERT(TestEq::EqualExists<NoEq>::value == false);
+        STATIC_ASSERT(TestEq::EqualExists<Eq>::value == true);
+        STATIC_ASSERT(TestEq::EqualExists<ExEq>::value == true);
     }
 }
 

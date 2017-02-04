@@ -9,11 +9,13 @@ project(labcpp11)
 
 set(SOURCE_FILES
     lang.hpp
-    operator.cpp
-    lambda.cpp
-    utilities.cpp
+    coerce.cpp
     decl.cpp
+    lang.hpp
+    lambda.cpp
     main.cpp
+    operator.cpp
+    utilities.cpp
 )
 
 
